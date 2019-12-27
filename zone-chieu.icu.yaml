@@ -1,0 +1,17 @@
+zone: chieu.icu
+records:
+  - type: A
+    name: satellite
+    address: 192.168.200.46
+    createPTR: true
+  - type: A
+    name: ns1
+    address: 192.168.0.11
+    createPTR: true
+  - type: A
+    name: ns2
+    address: 192.168.0.12
+    createPTR: true
+  - type: CNAME
+    name: idaeus
+    address: ns1
