@@ -56,23 +56,45 @@ func (ncdns NamecheapDNSUtil) Sync(config SyncConfig) error {
 		existingHost, ok := ncdns.findExistingRecord(hosts, desiredRecord)
 		if !ok {
 			toAdd = append(toAdd, namecheap.DomainDNSHost{
-				Name:    desiredRecord.Name + "." + string(zone),
+				Name:    desiredRecord.FQDN(string(zone)),
 				Type:    desiredRecord.Type,
 				Address: desiredRecord.Address,
 				TTL:     desiredRecord.TTL,
 			})
-			continue
+		} else {
+			existingHost.Address = desiredRecord.Address
+			existingHost.TTL = desiredRecord.TTL
 		}
 
-		existingHost.Address = desiredRecord.Address
-		existingHost.TTL = desiredRecord.TTL
+		if desiredRecord.CreatePTR {
+			ptr, err := desiredRecord.PTR()
+			if err != nil {
+				logrus.Warn("Unable to create PTR record: ", err)
+			}
+
+			ptrRecord, ok := ncdns.findExistingRecord(hosts, SyncRecordConfig{
+				Type:      "PTR",
+				Name:      ptr,
+			})
+
+			if !ok {
+				toAdd = append(toAdd, namecheap.DomainDNSHost{
+					Name:    ptr,
+					Type:    "PTR",
+					Address: desiredRecord.FQDN(string(zone)),
+				})
+			} else {
+				ptrRecord.Address = desiredRecord.FQDN(string(zone))
+			}
+		}
 	}
 
+	logrus.Info("New records to add:")
 	for _, newHost := range toAdd {
+		logrus.Info(newHost)
 		hosts = append(hosts, newHost)
 	}
 
-	logrus.Info(hosts)
 	setResult, err := ncdns.client.DomainDNSSetHosts(sld, tld, hosts)
 	if err != nil {
 		logrus.Warn(setResult)
