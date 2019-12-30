@@ -5,7 +5,6 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 
-	"github.com/billputer/go-namecheap"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
@@ -16,48 +15,6 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "ncdns",
 	Short: "Namecheap DNS CLI utility",
-	PreRun: func(cmd *cobra.Command, args []string) {
-
-	},
-	//Run: func(cmd *cobra.Command, args []string) {
-	//	apkToken := "xxxx"
-	//	c := namecheap.NewClient("kevinjqiu", apkToken, "kevinjqiu")
-	//	//domains, _ := c.DomainsGetList()
-	//	//for _, domain := range domains {
-	//	//	fmt.Printf("Domain: %+v\n\n", domain.Name)
-	//	//}
-	//	//
-	//	hostRecords, err := c.DomainsDNSGetHosts("idempotent", "io")
-	//	hosts := hostRecords.Hosts
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//
-	//	r := findRecord(hosts, "satellite")
-	//	if r == nil {
-	//		r = &namecheap.DomainDNSHost{
-	//			Name:    "satellite",
-	//			Type:    "A",
-	//			Address: "192.168.200.46",
-	//			TTL:     300,
-	//		}
-	//	}
-	//	hosts = append(hosts, *r)
-	//	result, err := c.DomainDNSSetHosts("idempotent", "io", hosts)
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//	fmt.Println(result)
-	//},
-}
-
-func findRecord(records []namecheap.DomainDNSHost, hostname string) *namecheap.DomainDNSHost {
-	for _, r := range records {
-		if r.Name == hostname {
-			return &r
-		}
-	}
-	return nil
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

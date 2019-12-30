@@ -73,8 +73,8 @@ func (ncdns NamecheapDNSUtil) Sync(config SyncConfig) error {
 			}
 
 			ptrRecord, ok := ncdns.findExistingRecord(hosts, SyncRecordConfig{
-				Type:      "PTR",
-				Name:      ptr,
+				Type: "PTR",
+				Name: ptr,
 			})
 
 			if !ok {
@@ -82,6 +82,7 @@ func (ncdns NamecheapDNSUtil) Sync(config SyncConfig) error {
 					Name:    ptr,
 					Type:    "PTR",
 					Address: desiredRecord.FQDN(string(zone)),
+					TTL:     desiredRecord.TTL,
 				})
 			} else {
 				ptrRecord.Address = desiredRecord.FQDN(string(zone))
@@ -100,6 +101,7 @@ func (ncdns NamecheapDNSUtil) Sync(config SyncConfig) error {
 		logrus.Warn(setResult)
 		return err
 	}
+	logrus.Info(setResult)
 	logrus.Info("OK")
 	return nil
 }
