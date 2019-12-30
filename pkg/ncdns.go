@@ -56,7 +56,7 @@ func (ncdns NamecheapDNSUtil) Sync(config SyncConfig) error {
 		existingHost, ok := ncdns.findExistingRecord(hosts, desiredRecord)
 		if !ok {
 			toAdd = append(toAdd, namecheap.DomainDNSHost{
-				Name:    desiredRecord.FQDN(string(zone)),
+				Name:    desiredRecord.Name,
 				Type:    desiredRecord.Type,
 				Address: desiredRecord.Address,
 				TTL:     desiredRecord.TTL,
