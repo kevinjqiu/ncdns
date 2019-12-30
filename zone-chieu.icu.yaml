@@ -14,4 +14,4 @@ records:
     createPTR: true
   - type: CNAME
     name: idaeus
-    address: ns1
+    address: ns1.chieu.icu

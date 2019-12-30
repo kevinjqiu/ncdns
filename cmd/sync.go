@@ -5,6 +5,7 @@ import (
 	"github.com/kevinjqiu/ncdns/pkg"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 )
@@ -28,7 +29,19 @@ func newSyncCommand() *cobra.Command {
 				logrus.Fatal(err)
 			}
 
-			var ncDNS = pkg.NamecheapDNSUtil{}
+			var config pkg.Config
+			if err := viper.Unmarshal(&config); err != nil {
+				logrus.Fatal(err)
+			}
+
+			ncDNS, err := pkg.NewNamecheapDNSUtil(config)
+			if err != nil {
+				logrus.Fatal(err)
+			}
+
+			if err := ncDNS.Sync(syncConfig); err != nil {
+				logrus.Fatal(err)
+			}
 			return nil
 		},
 	}
